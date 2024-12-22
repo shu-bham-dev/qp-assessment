@@ -1,0 +1,27 @@
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+model GroceryItem {
+  id        Int     @id @default(autoincrement())
+  name      String
+  price     Float
+  inventory Int
+  orders    Order[]
+}
+
+model Order {
+  id            Int     @id @default(autoincrement())
+  userId        Int
+  groceryItemId Int
+  quantity      Int
+  totalAmount   Float
+  createdAt     DateTime @default(now())
+  
+  groceryItem   GroceryItem @relation(fields: [groceryItemId], references: [id])
+}
