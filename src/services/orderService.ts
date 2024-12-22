@@ -26,13 +26,11 @@ export const createOrder = async (userId: number, groceryItems: OrderItem[]): Pr
 
       totalAmount += groceryItem.price * item.quantity;
 
-      // Update inventory
       await prisma.groceryItem.update({
         where: { id: groceryItem.id },
         data: { inventory: groceryItem.inventory - item.quantity },
       });
 
-      // Create order record
       const newOrder = prisma.order.create({
         data: {
           userId,
@@ -45,7 +43,6 @@ export const createOrder = async (userId: number, groceryItems: OrderItem[]): Pr
       orderPromises.push(newOrder);
     }
 
-    // Wait for all order promises to resolve
     const orders = await Promise.all(orderPromises);
 
     return orders;
